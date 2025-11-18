@@ -208,30 +208,11 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
       <Modal.Body className="px-4 py-4">
         {amigoNome && (
           <p style={{ marginBottom: '1.5rem', color: '#6c757d' }}>
-            Adicione uma sugestão de presente para {amigoNome}.
+            <strong>{amigoNome}</strong> adicione sua sugestão de presente.
           </p>
         )}
         
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label style={{ fontWeight: '500', marginBottom: '0.5rem' }}>
-              Amigo
-            </Form.Label>
-            <Form.Select
-              value={amigoSelecionado}
-              onChange={(e) => setAmigoSelecionado(e.target.value)}
-              required
-              disabled={!!amigoPreSelecionado}
-            >
-              <option value="">Selecione um amigo</option>
-              {AMIGOS.map((amigo) => (
-                <option key={amigo} value={amigo}>
-                  {amigo}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label style={{ fontWeight: '500', marginBottom: '0.5rem' }}>
               Nome do Presente

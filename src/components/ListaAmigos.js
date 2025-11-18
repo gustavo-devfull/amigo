@@ -107,6 +107,17 @@ const ListaAmigos = () => {
           >
             Lista de Sugestões de Amigo Secreto
           </h1>
+          <p 
+            style={{ 
+              textAlign: 'center',
+              color: '#d3d3d3',
+              marginTop: '1rem',
+              fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
+              opacity: 0.8
+            }}
+          >
+            Você pode cadastrar o presente com uma descrição, com um link ou com uma foto.
+          </p>
         </Col>
       </Row>
 
