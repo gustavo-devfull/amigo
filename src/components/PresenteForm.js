@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { addPresente, updatePresente, uploadImage } from '../services/presentesService';
 import { AMIGOS } from '../data/amigos';
 
-const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado = null, onSuccess }) => {
+const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado = null, onSuccess, onDelete }) => {
   const [tipoMidia, setTipoMidia] = useState('nenhum'); // 'nenhum', 'link', 'upload'
   const [loading, setLoading] = useState(false);
   const [amigoSelecionado, setAmigoSelecionado] = useState('');
@@ -26,7 +26,7 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
         if (presente.link) {
           setTipoMidia('link');
           setFormData({
-            nome: '',
+            nome: presente.nome || '',
             descricao: presente.descricao || '',
             link: presente.link || '',
             imagemFile: null,
@@ -88,6 +88,32 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
     });
   };
 
+  const handleDelete = async () => {
+    if (!presente || !presente.id) {
+      return;
+    }
+
+    if (!window.confirm('Tem certeza que deseja excluir este presente?')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (onDelete) {
+        await onDelete(presente.id);
+      }
+      handleClose();
+      if (onSuccess) {
+        onSuccess(presente.amigo);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir presente:', error);
+      alert('Erro ao excluir presente. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -114,12 +140,13 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
           amigo: amigoSelecionado
         };
       } else if (tipoMidia === 'link') {
-        if (!formData.link || !formData.descricao) {
+        if (!formData.nome || !formData.link || !formData.descricao) {
           alert('Por favor, preencha todos os campos');
           setLoading(false);
           return;
         }
         presenteData = {
+          nome: formData.nome,
           link: formData.link,
           descricao: formData.descricao,
           tipo: 'link',
@@ -214,7 +241,7 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
               placeholder="Ex: Livro de Ficção"
               value={formData.nome}
               onChange={(e) => handleInputChange('nome', e.target.value)}
-              required={tipoMidia !== 'link'}
+              required
             />
           </Form.Group>
 
@@ -305,26 +332,40 @@ const PresenteForm = ({ show, handleClose, presente = null, amigoPreSelecionado 
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer style={{ justifyContent: 'flex-end', gap: '0.5rem' }}>
-        <Button 
-          variant="secondary" 
-          onClick={handleClose} 
-          disabled={loading}
-          style={{ 
-            backgroundColor: '#ffffff', 
-            color: '#000', 
-            border: '1px solid #dee2e6' 
-          }}
-        >
-          Cancelar
-        </Button>
-        <Button 
-          variant="primary" 
-          onClick={handleSubmit} 
-          disabled={loading}
-        >
-          {loading ? 'Salvando...' : 'Salvar'}
-        </Button>
+      <Modal.Footer style={{ justifyContent: 'space-between', gap: '0.5rem' }}>
+        <div>
+          {presente && onDelete && (
+            <Button 
+              variant="danger" 
+              onClick={handleDelete} 
+              disabled={loading}
+              style={{ marginRight: '0.5rem' }}
+            >
+              Excluir
+            </Button>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Button 
+            variant="secondary" 
+            onClick={handleClose} 
+            disabled={loading}
+            style={{ 
+              backgroundColor: '#ffffff', 
+              color: '#000', 
+              border: '1px solid #dee2e6' 
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSubmit} 
+            disabled={loading}
+          >
+            {loading ? 'Salvando...' : 'Salvar'}
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );

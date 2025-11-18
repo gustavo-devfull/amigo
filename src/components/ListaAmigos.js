@@ -96,7 +96,17 @@ const ListaAmigos = () => {
     <Container className="mt-3 mt-md-4 px-3 px-md-4" style={{ maxWidth: '1400px' }}>
       <Row className="mb-3 mb-md-4">
         <Col>
-          <h1 className="h4 h-md-2 mb-0" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)' }}>Lista de Sugestões de Amigo Secreto</h1>
+          <h1 
+            className="h4 h-md-2 mb-0" 
+            style={{ 
+              fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
+              paddingTop: '50px',
+              textAlign: 'center',
+              color: '#d3d3d3'
+            }}
+          >
+            Lista de Sugestões de Amigo Secreto
+          </h1>
         </Col>
       </Row>
 
@@ -113,14 +123,32 @@ const ListaAmigos = () => {
           const presentesDoAmigo = getPresentesPorAmigo(amigo);
           const temPresentes = presentesDoAmigo.length > 0;
           const estaExpandido = amigosExpandidos[amigo];
+          const quantidadePresentes = presentesDoAmigo.length;
+          const porcentagemProgresso = Math.min((quantidadePresentes / 3) * 100, 100);
+          
+          const amigosComBordaLaranja = ['Alex', 'Nete', 'Fernando', 'Carol', 'Diogo', 'Diana'];
+          const temBordaLaranja = amigosComBordaLaranja.includes(amigo);
+          
+          const amigosComBordaRoxa = ['Valeria', 'Pasé', 'Kauê', 'Isabel', 'Thien', 'Guto', 'Mônada'];
+          const temBordaRoxa = amigosComBordaRoxa.includes(amigo);
+          
+          const amigosComBordaRosa = ['Osmar', 'Mud', 'Ana', 'Marina', 'Nair', 'Karina', 'Bruno'];
+          const temBordaRosa = amigosComBordaRosa.includes(amigo);
+          
+          const amigosComBordaVermelha = ['Tiago', 'Flávia', 'Firu', 'Claudia'];
+          const temBordaVermelha = amigosComBordaVermelha.includes(amigo);
           
           return (
             <Col key={amigo} xs={12} sm={6} md={4} lg={3}>
               <Card 
                 data-amigo-nome={amigo}
                 style={{
-                  backgroundColor: '#ffffff',
-                  border: temPresentes ? '2px solid #ff8c00' : '1px solid #e0e0e0',
+                  backgroundColor: temPresentes ? '#113C75' : '#0d6efd',
+                  border: 'none',
+                  ...(temBordaLaranja && { borderTop: '3px solid #ff8c00' }),
+                  ...(temBordaRoxa && { borderTop: '3px solid #ffd700' }),
+                  ...(temBordaRosa && { borderTop: '3px solid #ffc0cb' }),
+                  ...(temBordaVermelha && { borderTop: '3px solid #ff0000' }),
                   borderRadius: '8px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                   height: '100%',
@@ -132,7 +160,9 @@ const ListaAmigos = () => {
                   display: 'flex', 
                   flexDirection: 'column',
                   padding: '1.5rem',
-                  flex: 1
+                  paddingBottom: '1.75rem',
+                  flex: 1,
+                  position: 'relative'
                 }}>
                   {/* Cabeçalho com nome e botão */}
                   <div style={{ 
@@ -144,13 +174,14 @@ const ListaAmigos = () => {
                     <h5 style={{ 
                       fontWeight: 'bold', 
                       margin: 0,
-                      fontSize: '1.25rem'
+                      fontSize: '1.25rem',
+                      color: '#ffffff'
                     }}>
                       {amigo}
                     </h5>
                     {!estaExpandido && (
                       <Button 
-                        variant={temPresentes ? "outline-primary" : "primary"}
+                        variant={temPresentes ? "primary" : "primary"}
                         size="sm"
                         onClick={() => {
                           if (temPresentes) {
@@ -164,7 +195,32 @@ const ListaAmigos = () => {
                           fontSize: '0.875rem',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '0.25rem'
+                          gap: '0.25rem',
+                          ...(temPresentes ? {
+                            backgroundColor: '#28a745',
+                            borderColor: '#28a745',
+                            color: '#ffffff'
+                          } : {
+                            backgroundColor: '#0a5fd4',
+                            border: 'none',
+                            color: '#ffffff'
+                          })
+                        }}
+                        onMouseEnter={(e) => {
+                          if (temPresentes) {
+                            e.target.style.backgroundColor = '#218838';
+                            e.target.style.borderColor = '#218838';
+                          } else {
+                            e.target.style.backgroundColor = '#094fc0';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (temPresentes) {
+                            e.target.style.backgroundColor = '#28a745';
+                            e.target.style.borderColor = '#28a745';
+                          } else {
+                            e.target.style.backgroundColor = '#0a5fd4';
+                          }
                         }}
                       >
                         {temPresentes ? (
@@ -181,15 +237,14 @@ const ListaAmigos = () => {
                   {/* Conteúdo expandido - só aparece quando tem presentes */}
                   {estaExpandido && temPresentes && (
                     <>
-                      <div className="mb-3">
+                      <div>
                         {presentesDoAmigo.map((presente) => (
-                          <div key={presente.id} className="mb-2">
-                            <PresenteCard
-                              presente={presente}
-                              onEdit={handleEdit}
-                              onDelete={handleDelete}
-                            />
-                          </div>
+                          <PresenteCard
+                            key={presente.id}
+                            presente={presente}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                          />
                         ))}
                       </div>
                       
@@ -199,7 +254,10 @@ const ListaAmigos = () => {
                           size="sm"
                           onClick={() => toggleAmigo(amigo)}
                           style={{
-                            width: '100%'
+                            width: '100%',
+                            backgroundColor: 'transparent',
+                            color: '#ffffff',
+                            borderColor: '#ffffff'
                           }}
                         >
                           Recolher
@@ -212,7 +270,10 @@ const ListaAmigos = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.5rem'
+                            gap: '0.5rem',
+                            backgroundColor: '#0a5fd4',
+                            border: 'none',
+                            color: '#ffffff'
                           }}
                         >
                           <span>+</span> Adicionar Presente
@@ -220,6 +281,25 @@ const ListaAmigos = () => {
                       </div>
                     </>
                   )}
+                  
+                  {/* Barra de progresso na base do card */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    borderRadius: '0 0 8px 8px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      width: `${porcentagemProgresso}%`,
+                      backgroundColor: porcentagemProgresso === 100 ? '#4ade80' : '#fbbf24',
+                      transition: 'width 0.3s ease'
+                    }} />
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -240,6 +320,7 @@ const ListaAmigos = () => {
           const amigoParaExpandir = amigoNome || presenteEditando?.amigo || amigoFiltro;
           handleFormSuccess(amigoParaExpandir);
         }}
+        onDelete={handleDelete}
       />
     </Container>
   );
