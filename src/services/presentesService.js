@@ -1,0 +1,80 @@
+import { 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  doc, 
+  getDocs, 
+  query, 
+  orderBy 
+} from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { uploadImageToFTP } from './ftpService';
+
+const PRESENTES_COLLECTION = 'presentes';
+
+// Buscar todos os presentes
+export const getPresentes = async () => {
+  try {
+    const q = query(
+      collection(db, PRESENTES_COLLECTION),
+      orderBy('createdAt', 'desc')
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar presentes:', error);
+    throw error;
+  }
+};
+
+// Adicionar novo presente
+export const addPresente = async (presenteData) => {
+  try {
+    const docRef = await addDoc(collection(db, PRESENTES_COLLECTION), {
+      ...presenteData,
+      createdAt: new Date()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Erro ao adicionar presente:', error);
+    throw error;
+  }
+};
+
+// Atualizar presente existente
+export const updatePresente = async (id, presenteData) => {
+  try {
+    const presenteRef = doc(db, PRESENTES_COLLECTION, id);
+    await updateDoc(presenteRef, presenteData);
+  } catch (error) {
+    console.error('Erro ao atualizar presente:', error);
+    throw error;
+  }
+};
+
+// Deletar presente
+export const deletePresente = async (id) => {
+  try {
+    await deleteDoc(doc(db, PRESENTES_COLLECTION, id));
+  } catch (error) {
+    console.error('Erro ao deletar presente:', error);
+    throw error;
+  }
+};
+
+// Upload de imagem via FTP - salva em public_html/presentes/[amigo]
+// O nome do arquivo será alterado para Amigo_N.extensão
+export const uploadImage = async (file, amigo) => {
+  try {
+    const imageUrl = await uploadImageToFTP(file, amigo);
+    return imageUrl;
+  } catch (error) {
+    console.error('Erro ao fazer upload da imagem:', error);
+    throw error;
+  }
+};
+
