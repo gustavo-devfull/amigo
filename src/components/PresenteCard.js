@@ -130,44 +130,47 @@ const PresenteCard = ({ presente, onEdit, onDelete }) => {
                 >
                   {nomePresente || 'Link'}
                 </Card.Title>
-                    <a 
-                      href={presente.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <button
+                      onClick={() => window.open(presente.link, '_blank', 'noopener,noreferrer')}
                       style={{ 
-                    color: '#0d6efd',
-                        textDecoration: 'none', 
-                    display: 'flex',
+                        backgroundColor: '#0d6efd',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '0.375rem 0.75rem',
+                        fontSize: '0.875rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
                         alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.9rem',
-                    marginBottom: descricao ? '0.5rem' : 0
+                        gap: '0.5rem',
+                        marginBottom: descricao ? '0.5rem' : 0,
+                        transition: 'background-color 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.target.style.textDecoration = 'underline';
+                        e.target.style.backgroundColor = '#0b5ed7';
                       }}
                       onMouseLeave={(e) => {
-                        e.target.style.textDecoration = 'none';
+                        e.target.style.backgroundColor = '#0d6efd';
                       }}
                     >
-                  Link Online
-                  <svg 
-                    width="14" 
-                    height="14" 
-                    viewBox="0 0 16 16" 
-                    fill="none" 
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ flexShrink: 0 }}
-                  >
-                    <path 
-                      d="M6.66667 8.66667C6.95281 9.05286 7.31819 9.37749 7.73733 9.62L8.66667 8.69067C8.35111 8.45689 8.08015 8.17074 7.86667 7.84667M9.33333 7.33333C9.61948 6.94714 9.98486 6.62251 10.404 6.38L9.47467 5.45067C9.15911 5.68445 8.88815 5.9706 8.67467 6.29467M11.3333 4.66667L13.3333 2.66667M6 2.66667H3.33333C2.89131 2.66667 2.46738 2.84226 2.15482 3.15482C1.84226 3.46738 1.66667 3.89131 1.66667 4.33333V12.6667C1.66667 13.1087 1.84226 13.5326 2.15482 13.8452C2.46738 14.1577 2.89131 14.3333 3.33333 14.3333H11.6667C12.1087 14.3333 12.5326 14.1577 12.8452 13.8452C13.1577 13.5326 13.3333 13.1087 13.3333 12.6667V10" 
-                      stroke="currentColor" 
-                      strokeWidth="1.5" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
+                      Ver sugestão
+                      <svg 
+                        width="14" 
+                        height="14" 
+                        viewBox="0 0 16 16" 
+                        fill="none" 
+                        xmlns="http://www.w3.org/2000/svg"
+                        style={{ flexShrink: 0 }}
+                      >
+                        <path 
+                          d="M6.66667 8.66667C6.95281 9.05286 7.31819 9.37749 7.73733 9.62L8.66667 8.69067C8.35111 8.45689 8.08015 8.17074 7.86667 7.84667M9.33333 7.33333C9.61948 6.94714 9.98486 6.62251 10.404 6.38L9.47467 5.45067C9.15911 5.68445 8.88815 5.9706 8.67467 6.29467M11.3333 4.66667L13.3333 2.66667M6 2.66667H3.33333C2.89131 2.66667 2.46738 2.84226 2.15482 3.15482C1.84226 3.46738 1.66667 3.89131 1.66667 4.33333V12.6667C1.66667 13.1087 1.84226 13.5326 2.15482 13.8452C2.46738 14.1577 2.89131 14.3333 3.33333 14.3333H11.6667C12.1087 14.3333 12.5326 14.1577 12.8452 13.8452C13.1577 13.5326 13.3333 13.1087 13.3333 12.6667V10" 
+                          stroke="currentColor" 
+                          strokeWidth="1.5" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
               </>
             ) : (
               <Card.Title 
