@@ -11,7 +11,7 @@ const busboy = require('busboy');
 const FTP_CONFIG = {
   host: '46.202.90.62',
   user: 'u715606397.ideolog.ia.br',
-  password: '@Lulipop1',
+  password: '27y8rYoDq=Q&aHk:',
   port: 21,
   basePath: '/public_html/presentes'
 };
